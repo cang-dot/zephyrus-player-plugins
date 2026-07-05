@@ -100,10 +100,19 @@
 
 ### `playerStyle` — 全屏播放器样式
 
-自定义全屏播放器的视觉布局和交互。
+自定义全屏播放器的视觉布局和交互。支持两种模式：
+
+| 模式 | 适用场景 | 技术栈 | 版本 |
+|---|---|---|---|
+| **DOM API** | 轻量、高性能、Canvas/WebGL 渲染 | 原生 DOM API | v1 |
+| **Vue Component** | 复用 Vue 生态、复杂交互、Naive UI 组件 | Vue 3 SFC | v1.1+ |
+
+---
+
+#### 模式 A：DOM API（v1）
 
 **规范**：
-- 包含 `manifest.json` + `main.js` + `style.css` 的目录
+- 包含 `manifest.json` + `main.js` 的目录
 - 打包为 `.zip` 文件
 
 **`manifest.json`**：
@@ -132,7 +141,6 @@ export default {
    */
   mount(container, ctx) {
     container.innerHTML = `...`
-    // 返回清理函数（卸载时调用）
     return () => { container.innerHTML = '' }
   },
 
@@ -150,10 +158,95 @@ export default {
 **`style.css`** — 自动 scope 到容器内：
 ```css
 .vp-root { position: relative; height: 100%; }
-/* 样式只作用于当前插件容器 */
 ```
 
-**`StyleContext` 可用属性**：
+---
+
+#### 模式 B：Vue Component（v1.1+）
+
+插件作者以 Vue SFC 开发播放器界面，构建后发布为单 `.js` 文件。
+
+**规范**：
+- 单 `.js` 文件（构建产物，非原始 `.vue`）
+- 导出 Vue 组件选项对象（Options API 或 `defineComponent` 的结果）
+- 运行时不编译，无额外体积开销
+
+**开发方式**（推荐 Vite + `@vitejs/plugin-vue`）：
+```vue
+<!-- Player.vue -->
+<template>
+  <div class="my-player">
+    <img :src="ctx.coverUrl" class="cover" />
+    <h2>{{ ctx.songName }}</h2>
+    <p>{{ ctx.artist }}</p>
+    <button @click="ctx.togglePlay">
+      {{ ctx.isPlaying ? '⏸' : '▶' }}
+    </button>
+    <div class="progress-bar" @click="seek">
+      <div class="progress-fill" :style="{ width: ctx.progressPercent + '%' }" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+defineProps({ ctx: { type: Object, required: true } })
+const emit = defineEmits(['settingsChange'])
+const seek = (e) => ctx.seekTo(e.offsetX / e.currentTarget.offsetWidth * ctx.duration)
+</script>
+
+<style scoped>
+.my-player { /* ... */ }
+</style>
+```
+
+**构建为单文件（`vite.config.js`）**：
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  build: {
+    lib: { entry: 'src/Player.vue', formats: ['es'], fileName: () => 'main.js' },
+    rollupOptions: { external: ['vue'] }
+  }
+})
+```
+
+**构建产物 `main.js`** 被 Zephyrus 加载，注册为：
+```javascript
+import { defineComponent } from 'vue' // 构建时内联，无需运行时 import
+
+export default defineComponent({
+  name: 'MyPlayer',
+  props: { ctx: Object, settings: Object },
+  emits: ['settingsChange'],
+  template: `...`,            // 已编译为 render 函数
+  setup(props) { /* ... */ }  // 已编译，无额外开销
+})
+```
+
+**`manifest.json`**：
+```json
+{
+  "name": "极简播放器",
+  "version": "1.1.0",
+  "type": "playerStyle",
+  "entry": "main.js",
+  "renderMode": "vue",
+  "settings": [
+    { "key": "showCover", "type": "boolean", "label": "显示封面", "default": true }
+  ]
+}
+```
+
+关键区别：`"renderMode": "vue"` 标记为 Vue 组件模式。
+
+---
+
+#### 两种模式的共同部分
+
+**`StyleContext` 可用属性**（两种模式均可通过 props / ctx 参数访问）：
 ```typescript
 interface StyleContext {
   coverUrl: string
@@ -176,6 +269,21 @@ interface StyleContext {
   prevTrack: () => void
 }
 ```
+
+**`settings` 配置项格式**（两种模式通用）：
+```typescript
+interface SettingItem {
+  key: string
+  type: 'boolean' | 'radio' | 'color' | 'slider' | 'font'
+  label: string
+  default: any
+  options?: { value: string; label: string }[]
+  min?: number; max?: number; step?: number
+  showWhen?: { key: string; value: any }
+}
+```
+
+设置面板由 Zephyrus Player 自动渲染，插件通过 `settingsChange` 事件（Vue 模式）或 `ctx.onSettingsChange` 回调（DOM 模式）接收变更。
 
 ---
 
