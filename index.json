@@ -1,5 +1,76 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-07-05T00:00:00Z",
-  "plugins": []
+  "updatedAt": "2026-07-06T00:00:00Z",
+  "plugins": [
+    {
+      "id": "folia-classic",
+      "name": "流光",
+      "description": "DOM 逐词浮动 + 辉光，CSS transitions 驱动的歌词动画",
+      "version": "1.1.1",
+      "type": "playerStyle",
+      "author": { "name": "cang-dot", "url": "https://github.com/cang-dot" },
+      "downloadUrl": "https://raw.githubusercontent.com/cang-dot/zephyrus-folia-themes/main/dist/folia-classic.js",
+      "sourceRepo": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "homepage": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "license": "AGPL-3.0-only",
+      "minAppVersion": "0.9.7",
+      "tags": ["lyrics", "animation", "folia"]
+    },
+    {
+      "id": "folia-tilt",
+      "name": "倾诉",
+      "description": "两段分割 + 逐字渐入动画",
+      "version": "1.1.1",
+      "type": "playerStyle",
+      "author": { "name": "cang-dot", "url": "https://github.com/cang-dot" },
+      "downloadUrl": "https://raw.githubusercontent.com/cang-dot/zephyrus-folia-themes/main/dist/folia-tilt.js",
+      "sourceRepo": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "homepage": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "license": "AGPL-3.0-only",
+      "minAppVersion": "0.9.7",
+      "tags": ["lyrics", "animation", "folia"]
+    },
+    {
+      "id": "folia-partita",
+      "name": "云阶",
+      "description": "两栏分块 + 阶梯进入动画",
+      "version": "1.1.1",
+      "type": "playerStyle",
+      "author": { "name": "cang-dot", "url": "https://github.com/cang-dot" },
+      "downloadUrl": "https://raw.githubusercontent.com/cang-dot/zephyrus-folia-themes/main/dist/folia-partita.js",
+      "sourceRepo": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "homepage": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "license": "AGPL-3.0-only",
+      "minAppVersion": "0.9.7",
+      "tags": ["lyrics", "animation", "folia"]
+    },
+    {
+      "id": "folia-cadenza",
+      "name": "心象",
+      "description": "Canvas 圆形排列 + DOM 辉光叠加",
+      "version": "1.1.1",
+      "type": "playerStyle",
+      "author": { "name": "cang-dot", "url": "https://github.com/cang-dot" },
+      "downloadUrl": "https://raw.githubusercontent.com/cang-dot/zephyrus-folia-themes/main/dist/folia-cadenza.js",
+      "sourceRepo": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "homepage": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "license": "AGPL-3.0-only",
+      "minAppVersion": "0.9.7",
+      "tags": ["lyrics", "animation", "folia"]
+    },
+    {
+      "id": "folia-fume",
+      "name": "浮名",
+      "description": "Canvas 三栏报纸式 + 虚拟相机滚动",
+      "version": "1.1.1",
+      "type": "playerStyle",
+      "author": { "name": "cang-dot", "url": "https://github.com/cang-dot" },
+      "downloadUrl": "https://raw.githubusercontent.com/cang-dot/zephyrus-folia-themes/main/dist/folia-fume.js",
+      "sourceRepo": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "homepage": "https://github.com/cang-dot/zephyrus-folia-themes",
+      "license": "AGPL-3.0-only",
+      "minAppVersion": "0.9.7",
+      "tags": ["lyrics", "animation", "folia"]
+    }
+  ]
 }
